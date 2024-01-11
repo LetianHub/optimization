@@ -15,29 +15,58 @@ ddy = lambda x: (-4 * np.exp(-x**2) * x**2 + 2 * np.exp(-x**2)) / (np.exp(-x**2)
 
 # Initial value
 x_0 = -4
+
 # gradient descent (1st order)
-x = x_0
-step_size = 0.2
+x_grad = x_0
+step_size = 1
 KMaxIter = 400
 iter = 0
+x_grad_array = np.array([])
 while True:
   iter = iter + 1
-  grad = dy(x) 
-  x_new = x - step_size * grad
-  if y(x_new) >= y(x) or iter > KMaxIter:
+  grad = dy(x_grad) 
+  x_grad_new = x_grad - step_size * grad
+  if y(x_grad_new) >= y(x_grad) or iter > KMaxIter:
     break
   else:
-    x = x_new
+    x_grad = x_grad_new
+  x_grad_array = np.append(x_grad_array, x_grad)
 print(iter)
+
 # newton-type (2nd order)
+x_newton = x_0
+tolerance = 0.1
+KMaxIter = 400
+iter = 0
+x_newton_array = np.array([])
+while True:
+  iter = iter + 1
+  x_newton_new = x_newton - dy(x_newton) / ddy(x_newton)
+  if np.abs(x_newton_new - x_newton) < tolerance or iter > KMaxIter:
+    break
+  else:
+    x_newton = x_newton_new
+  x_newton_array = np.append(x_newton_array, x_newton)
+print(iter)
 
 
-plt.plot(X, y(X))
-plt.plot(x, y(x), marker='o', linestyle='', markersize=10, markerfacecolor='red', markeredgewidth=2)
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-plt.title('Optimization')
-plt.grid(True)
+fig1, ax1 = plt.subplots()
+ax1.plot(X, y(X))
+ax1.plot(x_grad, y(x_grad), marker='o', linestyle='', markersize=5, markerfacecolor='red', markeredgewidth=2)
+ax1.plot(x_grad_array[:-1], y(x_grad_array[:-1]), marker='o', linestyle='', markersize=5, markerfacecolor='magenta', markeredgewidth=2)
+ax1.set_xlabel('X-axis')
+ax1.set_ylabel('Y-axis')
+ax1.set_title('GD')
+ax1.grid(True)
+
+fig2, ax2 = plt.subplots()
+ax2.plot(X, y(X))
+ax2.plot(x_newton, y(x_newton), marker='o', linestyle='', markersize=5, markerfacecolor='green', markeredgewidth=2)
+ax2.plot(x_newton_array[:-1], y(x_newton_array[:-1]), marker='o', linestyle='', markersize=5, markerfacecolor='magenta', markeredgewidth=2)
+ax2.set_xlabel('X-axis')
+ax2.set_ylabel('Y-axis')
+ax2.set_title('Newton')
+ax2.grid(True)
+
 plt.show()
-
 
