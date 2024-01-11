@@ -33,7 +33,7 @@ while True:
   x_grad_array = np.append(x_grad_array, x_grad)
 print(iter)
 
-# newton-type (2nd order)
+# Newton-type (2nd order)
 x_newton = x_0
 tolerance = 0.1
 KMaxIter = 400
